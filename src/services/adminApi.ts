@@ -54,6 +54,8 @@ export const adminApi = {
     // Site Settings
     getSiteSettings: () => api.get('/settings'),
     updateSiteSettings: (data: any) => api.put('/settings', data),
+    getCloudflareBrowserCheck: () => api.get('/settings/cloudflare/browser-check'),
+    updateCloudflareBrowserCheck: (value: 'on' | 'off') => api.patch('/settings/cloudflare/browser-check', { value }),
 
     // Validation Servers
     getServers: (params?: Record<string, unknown>) => api.get('/servers', { params }),

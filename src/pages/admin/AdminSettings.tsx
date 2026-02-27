@@ -4,18 +4,27 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Globe, MapPin, Mail, Phone, Settings, Save, Twitter, Facebook, Linkedin, Instagram, Github } from 'lucide-react';
+import { Globe, MapPin, Mail, Phone, Settings, Save, Twitter, Facebook, Linkedin, Instagram, Github, ShieldCheck } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 
 export default function AdminSettings() {
     const [settings, setSettings] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    const [cfBrowserCheck, setCfBrowserCheck] = useState<'on' | 'off' | null>(null);
+
     const fetchSettings = async () => {
         try {
             setIsLoading(true);
-            const res = await adminApi.getSiteSettings();
-            setSettings(res.data?.data?.settings || {});
+            const [settingsRes, cfRes] = await Promise.all([
+                adminApi.getSiteSettings(),
+                adminApi.getCloudflareBrowserCheck().catch(() => null)
+            ]);
+            setSettings(settingsRes.data?.data?.settings || {});
+            if (cfRes?.data?.data?.result?.value) {
+                setCfBrowserCheck(cfRes.data.data.result.value);
+            }
         } catch (error) {
             toast.error('Failed to load settings');
         } finally {
@@ -46,6 +55,19 @@ export default function AdminSettings() {
         }
     };
 
+    const handleCfToggle = async (checked: boolean) => {
+        const newValue = checked ? 'on' : 'off';
+        const previousValue = cfBrowserCheck;
+        setCfBrowserCheck(newValue);
+        try {
+            await adminApi.updateCloudflareBrowserCheck(newValue);
+            toast.success(`Cloudflare Browser Check set to ${newValue}`);
+        } catch (error) {
+            toast.error('Failed to update Cloudflare setting');
+            setCfBrowserCheck(previousValue);
+        }
+    };
+
     if (isLoading) {
         return <div className="p-8 animate-pulse">Loading settings...</div>;
     }
@@ -65,6 +87,28 @@ export default function AdminSettings() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
+                {/* Cloudflare Security */}
+                <Card className="bg-card/40 border-border/40 backdrop-blur-md shadow-sm md:col-span-2">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-amber-500" /> Cloudflare Security</CardTitle>
+                        <CardDescription>Manage domain security policies directly via Cloudflare API.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="flex items-center justify-between p-4 bg-background/50 rounded-lg border border-border/50">
+                            <div>
+                                <Label className="text-base font-semibold">Browser Integrity Check</Label>
+                                <p className="text-sm text-muted-foreground mt-1">Evaluate HTTP requests to block malicious bots and automated scrapers before they reach your server.</p>
+                            </div>
+                            <Switch
+                                checked={cfBrowserCheck === 'on'}
+                                onCheckedChange={handleCfToggle}
+                                disabled={cfBrowserCheck === null}
+                                className="data-[state=checked]:bg-amber-500"
+                            />
+                        </div>
+                    </CardContent>
+                </Card>
+
                 {/* Social Media Links */}
                 <Card className="bg-card/40 border-border/40 backdrop-blur-md shadow-sm">
                     <CardHeader>
