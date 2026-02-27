@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiKeysApi } from '@/services/api';
+import { apiKeysApi, API_URL } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -351,7 +351,7 @@ export default function ApiKeys() {
           <div className="p-5 bg-background/50 border border-border/50 rounded-xl shadow-inner group transition-colors hover:bg-background/80 hover:border-primary/30">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Base URL</p>
             <code className="px-3 py-2 bg-muted/60 rounded-md text-[13px] font-mono text-primary shadow-sm ring-1 ring-primary/20">
-              {import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}
+              {API_URL}
             </code>
           </div>
 
@@ -376,7 +376,7 @@ export default function ApiKeys() {
             </div>
             <pre className="text-xs font-mono text-foreground overflow-x-auto select-all leading-loose">
               <span className="text-blue-400">curl</span> <span className="text-muted-foreground">-X</span> POST \
-              {'\n'}  <span className="text-green-400">{import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/validate/single</span> \
+              {'\n'}  <span className="text-green-400">{API_URL}/validate/single</span> \
               {'\n'}  <span className="text-muted-foreground">-H</span> <span className="text-yellow-300">"X-API-Key: your_api_key_here"</span> \
               {'\n'}  <span className="text-muted-foreground">-H</span> <span className="text-yellow-300">"Content-Type: application/json"</span> \
               {'\n'}  <span className="text-muted-foreground">-d</span> <span className="text-yellow-300">'{'{"email": "contact@enterprise.com"}'}'</span>

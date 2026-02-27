@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { API_URL } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -61,7 +62,7 @@ export default function BulkValidation() {
 
           // Use the backend to access the engine via the existing validate endpoint
           const token = localStorage.getItem('token');
-          const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/validate/csv-headers`, {
+          const response = await fetch(`${API_URL}/validate/csv-headers`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -135,7 +136,7 @@ export default function BulkValidation() {
 
       // Make the API call directly instead of using the service
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/validate/bulk`, {
+      const response = await fetch(`${API_URL}/validate/bulk`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
