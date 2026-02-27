@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -177,6 +177,8 @@ export default function PublicLayout() {
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="right" className="w-80 p-0 border-l border-border/40 bg-card/95 backdrop-blur-3xl shadow-2xl flex flex-col">
+                                <SheetTitle className="sr-only">Main Menu</SheetTitle>
+                                <SheetDescription className="sr-only">Main website navigation menu</SheetDescription>
                                 <div className="h-20 flex items-center px-6 border-b border-border/40">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center ring-1 ring-primary/30">

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -162,6 +162,8 @@ export default function DashboardLayout() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-80 p-0 border-r border-border/40 bg-card/90 backdrop-blur-3xl shadow-2xl">
+              <SheetTitle className="sr-only">Dashboard Navigation</SheetTitle>
+              <SheetDescription className="sr-only">App dashboard and settings navigation</SheetDescription>
               <div className="h-20 flex items-center justify-between px-6 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <NavLink to="/" className="flex items-center gap-3 relative group">

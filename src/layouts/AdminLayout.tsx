@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
@@ -107,6 +107,8 @@ export default function AdminLayout() {
                                     </Button>
                                 </SheetTrigger>
                                 <SheetContent side="left" className="w-72 p-0 border-r border-border/40 bg-card/95 backdrop-blur-3xl flex flex-col">
+                                    <SheetTitle className="sr-only">Admin Navigation</SheetTitle>
+                                    <SheetDescription className="sr-only">Admin control center navigation</SheetDescription>
                                     <SidebarContent />
                                 </SheetContent>
                             </Sheet>
