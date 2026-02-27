@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { validationApi } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,10 +20,6 @@ interface UploadState {
   file: File | null;
   isUploading: boolean;
   progress: number;
-}
-
-interface CsvHeaders {
-  headers: string[];
 }
 
 interface JobResult {
@@ -54,16 +49,16 @@ export default function BulkValidation() {
         toast.error('File too large. Maximum size is 50MB.');
         return;
       }
-      
+
       setUploadState((prev) => ({ ...prev, file }));
       setJobResult(null);
-      
+
       // If it's a CSV file, extract headers
       if (file.type === 'text/csv' || file.name.toLowerCase().endsWith('.csv')) {
         try {
           const formData = new FormData();
           formData.append('csvFile', file);
-                    
+
           // Use the backend to access the engine via the existing validate endpoint
           const token = localStorage.getItem('token');
           const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/validate/csv-headers`, {
@@ -73,7 +68,7 @@ export default function BulkValidation() {
             },
             body: formData,
           });
-          
+
           if (response.ok) {
             const result = await response.json();
             // Handle both direct headers response and wrapped response
@@ -81,7 +76,7 @@ export default function BulkValidation() {
             if (headersData.headers && headersData.headers.length > 0) {
               setCsvHeaders(headersData.headers);
               // Check if 'email' column exists
-              const emailCol = headersData.headers.find((header: string) => 
+              const emailCol = headersData.headers.find((header: string) =>
                 header.toLowerCase().includes('email')
               ) || 'email';
               setSelectedEmailColumn(emailCol);
@@ -137,7 +132,7 @@ export default function BulkValidation() {
       }
       // Include the selected email column
       formData.append('emailColumn', selectedEmailColumn);
-      
+
       // Make the API call directly instead of using the service
       const token = localStorage.getItem('token');
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/validate/bulk`, {
@@ -152,7 +147,7 @@ export default function BulkValidation() {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Upload failed');
       }
-      
+
       const responseData = await response.json();
       setJobResult(responseData.data.data);
       toast.success('Bulk validation job started!');
