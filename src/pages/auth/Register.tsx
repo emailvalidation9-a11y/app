@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Eye, EyeOff, Check } from 'lucide-react';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -14,6 +15,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const { register, isLoading } = useAuth();
 
   const passwordRequirements = [
@@ -28,7 +30,7 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!allRequirementsMet) return;
-    await register(name, email, password);
+    await register(name, email, password, turnstileToken || undefined);
   };
 
   return (
@@ -96,9 +98,8 @@ export default function Register() {
               {passwordRequirements.map((req, index) => (
                 <div
                   key={index}
-                  className={`flex items-center gap-2 text-xs ${
-                    req.met ? 'text-green-500' : 'text-muted-foreground'
-                  }`}
+                  className={`flex items-center gap-2 text-xs ${req.met ? 'text-green-500' : 'text-muted-foreground'
+                    }`}
                 >
                   {req.met ? (
                     <Check className="h-3 w-3" />
@@ -127,12 +128,18 @@ export default function Register() {
               </Link>
             </Label>
           </div>
+          <div className="flex justify-center mt-2">
+            <Turnstile
+              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+              onSuccess={(token) => setTurnstileToken(token)}
+            />
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading || !allRequirementsMet || !agreeTerms}
+            disabled={isLoading || !allRequirementsMet || !agreeTerms || !turnstileToken}
           >
             {isLoading ? (
               <>

@@ -27,8 +27,8 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, turnstileToken?: string) => Promise<void>;
+  register: (name: string, email: string, password: string, turnstileToken?: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -62,10 +62,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, turnstileToken?: string) => {
     try {
       setIsLoading(true);
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post('/auth/login', { email, password, turnstileToken });
 
       const { token, user } = response.data.data;
       localStorage.setItem('token', token);
@@ -94,10 +94,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, password: string, turnstileToken?: string) => {
     try {
       setIsLoading(true);
-      const response = await api.post('/auth/register', { name, email, password });
+      const response = await api.post('/auth/register', { name, email, password, turnstileToken });
 
       const { token, user } = response.data.data;
       localStorage.setItem('token', token);
