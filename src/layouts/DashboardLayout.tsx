@@ -86,7 +86,7 @@ export default function DashboardLayout() {
             <Zap className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <span className="font-extrabold text-xl tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent block">Spam<span className="text-primary tracking-tight">Guard</span></span>
+            <span className="font-extrabold text-xl tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent block">True<span className="text-primary tracking-tight">Validator</span></span>
             <span className="text-[10px] text-primary/80 font-mono font-bold uppercase tracking-widest block drop-shadow-sm">Email Validation</span>
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function DashboardLayout() {
                       <Zap className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <span className="font-extrabold text-xl tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent block">Spam<span className="text-primary tracking-tight">Guard</span></span>
+                      <span className="font-extrabold text-xl tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent block">True<span className="text-primary tracking-tight">Validator</span></span>
                       <span className="text-[10px] text-primary/80 font-mono font-bold uppercase tracking-widest block drop-shadow-sm">Email Validation</span>
                     </div>
                   </NavLink>

@@ -125,7 +125,7 @@ export default function AdminSettings() {
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><Mail className="h-4 w-4 text-muted-foreground" /> General Email</Label>
                             <Input
-                                placeholder="hello@spamguard.dev"
+                                placeholder="hello@truevalidator.dev"
                                 value={settings?.contactInfo?.email || ''}
                                 onChange={(e) => handleChange('contactInfo', 'email', e.target.value)}
                             />
@@ -133,7 +133,7 @@ export default function AdminSettings() {
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><Mail className="h-4 w-4 text-red-400" /> Support Email</Label>
                             <Input
-                                placeholder="support@spamguard.dev"
+                                placeholder="support@truevalidator.dev"
                                 value={settings?.contactInfo?.supportEmail || ''}
                                 onChange={(e) => handleChange('contactInfo', 'supportEmail', e.target.value)}
                             />
@@ -141,7 +141,7 @@ export default function AdminSettings() {
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><Mail className="h-4 w-4 text-green-400" /> Sales Email</Label>
                             <Input
-                                placeholder="sales@spamguard.dev"
+                                placeholder="sales@truevalidator.dev"
                                 value={settings?.contactInfo?.salesEmail || ''}
                                 onChange={(e) => handleChange('contactInfo', 'salesEmail', e.target.value)}
                             />

@@ -207,7 +207,7 @@ export default function Dashboard() {
             <div className="divide-y divide-border/40">
               {stats.recentJobs.map((job) => (
                 <div
-                  key={job.id}
+                  key={job._id || job.id}
                   className="flex flex-col sm:flex-row sm:items-center justify-between p-5 hover:bg-muted/30 transition-colors gap-4"
                 >
                   <div className="flex items-start sm:items-center gap-4">

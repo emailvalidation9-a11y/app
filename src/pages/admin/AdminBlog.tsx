@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Plus, Edit, Trash2, Calendar, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -19,6 +19,7 @@ interface BlogPost {
     category: string;
     status: 'draft' | 'published';
     author: string;
+    coverImage?: string;
     createdAt: string;
 }
 
@@ -35,8 +36,10 @@ export default function AdminBlog() {
         excerpt: '',
         content: '',
         category: 'General',
-        status: 'draft'
+        status: 'draft',
+        coverImage: ''
     });
+    const [isUploading, setIsUploading] = useState(false);
 
     const fetchPosts = async () => {
         try {
@@ -63,7 +66,8 @@ export default function AdminBlog() {
                 excerpt: post.excerpt || '',
                 content: post.content || '',
                 category: post.category || 'General',
-                status: post.status || 'draft'
+                status: post.status || 'draft',
+                coverImage: post.coverImage || ''
             });
         } else {
             setEditingPost(null);
@@ -73,19 +77,52 @@ export default function AdminBlog() {
                 excerpt: '',
                 content: '',
                 category: 'General',
-                status: 'draft'
+                status: 'draft',
+                coverImage: ''
             });
         }
         setIsDialogOpen(true);
     };
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            setIsUploading(true);
+            const uploadData = new FormData();
+            uploadData.append('image', file);
+            if (formData.slug) {
+                uploadData.append('slug', formData.slug);
+            }
+
+            const res = await adminApi.uploadBlogImage(uploadData);
+            setFormData({ ...formData, coverImage: res.data?.data?.url || '' });
+            toast.success('Image uploaded successfully');
+        } catch (error) {
+            toast.error('Failed to upload image');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     const handleSave = async () => {
         try {
+            if (!formData.title.trim() || !formData.content.trim()) {
+                toast.error('Title and content are required.');
+                return;
+            }
+
+            const dataToSave = { ...formData };
+            if (!dataToSave.slug && dataToSave.title) {
+                dataToSave.slug = dataToSave.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            }
+
             if (editingPost) {
-                await adminApi.updateBlogPost(editingPost._id, formData);
+                await adminApi.updateBlogPost(editingPost._id, dataToSave);
                 toast.success('Post updated');
             } else {
-                await adminApi.createBlogPost(formData);
+                await adminApi.createBlogPost(dataToSave);
                 toast.success('Post created');
             }
             setIsDialogOpen(false);
@@ -129,6 +166,11 @@ export default function AdminBlog() {
                     posts.map((post) => (
                         <Card key={post._id} className="bg-card/40 border-border/40 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow group">
                             <CardContent className="p-6 flex flex-col md:flex-row gap-6 md:items-center justify-between">
+                                {post.coverImage && (
+                                    <div className="shrink-0 w-32 h-24 rounded-md overflow-hidden bg-muted">
+                                        <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
+                                    </div>
+                                )}
                                 <div className="flex-1 space-y-2 text-left">
                                     <div className="flex items-center gap-3">
                                         <h3 className="font-bold text-lg">{post.title}</h3>
@@ -160,6 +202,9 @@ export default function AdminBlog() {
                 <DialogContent className="sm:max-w-[700px] border-border/50 bg-card/95 backdrop-blur-xl">
                     <DialogHeader>
                         <DialogTitle>{editingPost ? 'Edit Post' : 'New Post'}</DialogTitle>
+                        <DialogDescription className="text-sm text-muted-foreground mt-1.5">
+                            Fill in the details for the blog post below. A slug will be inferred from the title if left empty.
+                        </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-2 gap-4">
@@ -189,9 +234,22 @@ export default function AdminBlog() {
                                 </select>
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label>Excerpt</Label>
-                            <Input value={formData.excerpt} onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })} placeholder="Short summary" />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>Cover Image</Label>
+                                <div className="flex gap-2 items-end">
+                                    <Input type="file" accept="image/*" onChange={handleImageUpload} disabled={isUploading} className="flex-1" />
+                                    {formData.coverImage && (
+                                        <div className="shrink-0 h-10 w-10 rounded overflow-hidden border">
+                                            <img src={formData.coverImage} alt="Cover" className="h-full w-full object-cover" />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Excerpt</Label>
+                                <Input value={formData.excerpt} onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })} placeholder="Short summary" />
+                            </div>
                         </div>
                         <div className="space-y-2">
                             <Label>Content (Markdown)</Label>

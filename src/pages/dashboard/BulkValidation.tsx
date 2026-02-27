@@ -23,6 +23,10 @@ interface UploadState {
   progress: number;
 }
 
+interface CsvHeaders {
+  headers: string[];
+}
+
 interface JobResult {
   job_id: string;
   total_emails: number;
@@ -38,8 +42,11 @@ export default function BulkValidation() {
   });
   const [webhookUrl, setWebhookUrl] = useState('');
   const [jobResult, setJobResult] = useState<JobResult | null>(null);
+  const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
+  const [selectedEmailColumn, setSelectedEmailColumn] = useState<string>('email');
+  const [showColumnSelector, setShowColumnSelector] = useState(false);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
       // Validate file size (50MB max)
@@ -47,8 +54,57 @@ export default function BulkValidation() {
         toast.error('File too large. Maximum size is 50MB.');
         return;
       }
+      
       setUploadState((prev) => ({ ...prev, file }));
       setJobResult(null);
+      
+      // If it's a CSV file, extract headers
+      if (file.type === 'text/csv' || file.name.toLowerCase().endsWith('.csv')) {
+        try {
+          const formData = new FormData();
+          formData.append('csvFile', file);
+                    
+          // Use the backend to access the engine via the existing validate endpoint
+          const token = localStorage.getItem('token');
+          const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/validate/csv-headers`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+            body: formData,
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            // Handle both direct headers response and wrapped response
+            const headersData = result.data || result;
+            if (headersData.headers && headersData.headers.length > 0) {
+              setCsvHeaders(headersData.headers);
+              // Check if 'email' column exists
+              const emailCol = headersData.headers.find((header: string) => 
+                header.toLowerCase().includes('email')
+              ) || 'email';
+              setSelectedEmailColumn(emailCol);
+              setShowColumnSelector(true);
+            } else {
+              setCsvHeaders([]);
+              setShowColumnSelector(false);
+            }
+          } else {
+            console.error('Failed to parse CSV headers');
+            setCsvHeaders([]);
+            setShowColumnSelector(false);
+          }
+        } catch (error) {
+          console.error('Error parsing CSV headers:', error);
+          setCsvHeaders([]);
+          setShowColumnSelector(false);
+        }
+      } else {
+        // For non-CSV files, hide column selector
+        setCsvHeaders([]);
+        setShowColumnSelector(false);
+      }
     }
   }, []);
 
@@ -73,12 +129,32 @@ export default function BulkValidation() {
     setUploadState((prev) => ({ ...prev, isUploading: true }));
 
     try {
-      const response = await validationApi.validateBulk(
-        uploadState.file,
-        webhookUrl || undefined
-      );
+      // Prepare form data manually to include email column
+      const formData = new FormData();
+      formData.append('file', uploadState.file);
+      if (webhookUrl) {
+        formData.append('webhook_url', webhookUrl);
+      }
+      // Include the selected email column
+      formData.append('emailColumn', selectedEmailColumn);
+      
+      // Make the API call directly instead of using the service
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/validate/bulk`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-      setJobResult(response.data.data);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
+      
+      const responseData = await response.json();
+      setJobResult(responseData.data.data);
       toast.success('Bulk validation job started!');
 
       // Reset file after successful upload
@@ -88,7 +164,7 @@ export default function BulkValidation() {
         progress: 100,
       });
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Upload failed');
+      toast.error(error.message || 'Upload failed');
       setUploadState((prev) => ({ ...prev, isUploading: false, progress: 0 }));
     }
   };
@@ -183,6 +259,30 @@ export default function BulkValidation() {
               >
                 <XCircle className="h-5 w-5" />
               </Button>
+            </div>
+          )}
+
+          {/* Email Column Selection */}
+          {showColumnSelector && csvHeaders.length > 0 && (
+            <div className="space-y-3 p-5 rounded-xl border border-border/50 bg-background/30">
+              <Label htmlFor="email-column" className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+                Email Column
+              </Label>
+              <select
+                id="email-column"
+                value={selectedEmailColumn}
+                onChange={(e) => setSelectedEmailColumn(e.target.value)}
+                className="w-full p-3 rounded-lg border border-input bg-background focus:ring-2 focus:ring-primary focus:border-primary/50 outline-none transition-colors"
+              >
+                {csvHeaders.map((header, index) => (
+                  <option key={index} value={header}>
+                    {header} {header.toLowerCase().includes('email') && '(likely email column)'}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-muted-foreground pt-1">
+                Select the column that contains email addresses in your CSV file.
+              </p>
             </div>
           )}
 

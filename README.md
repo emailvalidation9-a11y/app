@@ -1,4 +1,4 @@
-# SpamGuard — Frontend (app)
+# TrueValidator — Frontend (app)
 
 React + Vite + TypeScript frontend. Use this as the **root** when this folder is its own repo.
 

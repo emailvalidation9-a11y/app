@@ -52,7 +52,7 @@ export default function AdminLayout() {
                     </div>
                     <div>
                         <span className="font-extrabold text-lg tracking-tight block">
-                            SpamGuard<span className="text-red-400">Admin</span>
+                            TrueValidator<span className="text-red-400">Admin</span>
                         </span>
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Center</span>
                     </div>

@@ -16,8 +16,8 @@ interface User {
   };
   role: string;
   email_verified: boolean;
-  stripe?: {
-    subscription_id?: string;
+  razorpay?: {
+    subscriptionId?: string;
     status?: string;
   };
   created_at?: string;

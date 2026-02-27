@@ -46,6 +46,10 @@ export default function Billing() {
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
 
+  const isIndia = Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Kolkata';
+  const currencySymbol = isIndia ? '₹' : '$';
+  const priceMultiplier = isIndia ? 83 : 1;
+
   useEffect(() => {
     fetchBillingData();
   }, []);
@@ -66,17 +70,88 @@ export default function Billing() {
     }
   };
 
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
   const handleSubscribe = async (plan: string) => {
     setIsProcessing(plan);
     try {
-      const response = await billingApi.createCheckout({
-        plan,
-        success_url: `${window.location.origin}/billing`,
-        cancel_url: `${window.location.origin}/billing`,
+      const res = await loadRazorpayScript();
+      if (!res) {
+        toast.error('Failed to load payment gateway. Please verify your connection.');
+        setIsProcessing(null);
+        return;
+      }
+
+      const isIndia = Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Kolkata';
+      const userCurrency = isIndia ? 'INR' : 'USD';
+
+      const response = await billingApi.createCheckout({ plan, currency: userCurrency });
+      const { data } = response.data;
+
+      if (data.isFree) {
+        toast.success(data.message);
+        fetchBillingData();
+        // Since we bypassed authContext update here, reload window.
+        window.location.reload();
+        return;
+      }
+
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: data.currency,
+        name: 'TrueValidator',
+        description: `Subscription: ${plan}`,
+        order_id: data.orderId,
+        handler: async function (res: any) {
+          try {
+            await billingApi.verifyPayment({
+              ...res,
+              type: 'subscription',
+              slug: plan,
+              currency: userCurrency
+            });
+            toast.success('Subscription activated successfully!');
+            fetchBillingData();
+            window.location.reload();
+          } catch (err) {
+            toast.error('Payment verification failed');
+          }
+        },
+        prefill: {
+          name: user?.name || '',
+          email: user?.email || '',
+        },
+        theme: {
+          color: '#3b82f6'
+        },
+        modal: {
+          ondismiss: function () {
+            setIsProcessing(null);
+          }
+        }
+      };
+
+      const rzp1 = new (window as any).Razorpay(options);
+      rzp1.on('payment.failed', function () {
+        toast.error('Payment failed');
+        setIsProcessing(null);
       });
-      window.location.href = response.data.data.checkout_url;
+      rzp1.open();
     } catch (error) {
-      toast.error('Failed to create checkout session');
+      toast.error('Failed to initiate payment');
       setIsProcessing(null);
     }
   };
@@ -84,14 +159,63 @@ export default function Billing() {
   const handleBuyCredits = async (packageName: string) => {
     setIsProcessing(packageName);
     try {
-      const response = await billingApi.purchaseCredits({
-        package: packageName,
-        success_url: `${window.location.origin}/billing`,
-        cancel_url: `${window.location.origin}/billing`,
+      const res = await loadRazorpayScript();
+      if (!res) {
+        toast.error('Failed to load payment gateway');
+        setIsProcessing(null);
+        return;
+      }
+
+      const isIndia = Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Kolkata';
+      const userCurrency = isIndia ? 'INR' : 'USD';
+
+      const response = await billingApi.purchaseCredits({ package: packageName, currency: userCurrency });
+      const { data } = response.data;
+
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: data.currency,
+        name: 'TrueValidator',
+        description: `Credit Package: ${packageName}`,
+        order_id: data.orderId,
+        handler: async function (res: any) {
+          try {
+            await billingApi.verifyPayment({
+              ...res,
+              type: 'credit_package',
+              slug: packageName,
+              currency: userCurrency
+            });
+            toast.success('Credits added successfully!');
+            fetchBillingData();
+            window.location.reload();
+          } catch (err) {
+            toast.error('Payment verification failed');
+          }
+        },
+        prefill: {
+          name: user?.name || '',
+          email: user?.email || '',
+        },
+        theme: {
+          color: '#6366f1'
+        },
+        modal: {
+          ondismiss: function () {
+            setIsProcessing(null);
+          }
+        }
+      };
+
+      const rzp1 = new (window as any).Razorpay(options);
+      rzp1.on('payment.failed', function () {
+        toast.error('Payment failed');
+        setIsProcessing(null);
       });
-      window.location.href = response.data.data.checkout_url;
+      rzp1.open();
     } catch (error) {
-      toast.error('Failed to create checkout session');
+      toast.error('Failed to initiate payment');
       setIsProcessing(null);
     }
   };
@@ -144,7 +268,7 @@ export default function Billing() {
                 </div>
               </div>
             </div>
-            {user?.stripe?.subscription_id && (
+            {user?.razorpay?.subscriptionId && (
               <div className="flex flex-col items-end gap-2 bg-background/50 p-3 rounded-xl border border-border/50 shadow-inner">
                 <div className="flex items-center gap-2 text-sm text-foreground font-medium">
                   <Calendar className="h-4 w-4 text-primary" />
@@ -154,7 +278,7 @@ export default function Billing() {
                 </div>
                 <div className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-muted-foreground">
                   <CreditCard className="h-3 w-3" />
-                  <span className="capitalize">{user?.stripe?.status} state</span>
+                  <span className="capitalize">{user?.razorpay?.status || 'active'} state</span>
                 </div>
               </div>
             )}
@@ -194,7 +318,7 @@ export default function Billing() {
                 <CardHeader className="pb-4">
                   <CardTitle className="text-xl mb-1 capitalize tracking-tight">{plan.name}</CardTitle>
                   <CardDescription className="flex items-end gap-1">
-                    <span className="text-4xl font-black text-foreground">${plan.price}</span>
+                    <span className="text-4xl font-black text-foreground">{currencySymbol}{Math.round(plan.price * priceMultiplier)}</span>
                     <span className="text-muted-foreground font-medium mb-1">/{plan.interval === 'year' ? 'yr' : 'mo'}</span>
                   </CardDescription>
                 </CardHeader>
@@ -252,7 +376,7 @@ export default function Billing() {
                   <CardTitle className="text-lg capitalize tracking-tight">{key} Batch</CardTitle>
                 </div>
                 <CardDescription className="flex items-end gap-1 mt-2">
-                  <span className="text-3xl font-black text-foreground">${pkg.price}</span>
+                  <span className="text-3xl font-black text-foreground">{currencySymbol}{Math.round(pkg.price * priceMultiplier)}</span>
                   <span className="text-xs uppercase font-bold tracking-widest text-muted-foreground mb-1.5 ml-1">One-Time</span>
                 </CardDescription>
               </CardHeader>
@@ -342,7 +466,7 @@ export default function Billing() {
                     </p>
                     {transaction.amount.paid > 0 && (
                       <p className="text-xs font-bold text-muted-foreground border border-border/50 bg-background/50 px-2 py-0.5 rounded uppercase tracking-widest mt-1.5 shadow-inner inline-block">
-                        ${(transaction.amount.paid / 100).toFixed(2)} USD
+                        {transaction.amount.currency === 'INR' ? '₹' : '$'} {(transaction.amount.paid / 100).toFixed(2)} {transaction.amount.currency}
                       </p>
                     )}
                   </div>

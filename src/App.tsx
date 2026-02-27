@@ -64,7 +64,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="dark" storageKey="spamguard-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="truevalidator-theme">
         <Router>
           <AuthProvider>
             <Routes>

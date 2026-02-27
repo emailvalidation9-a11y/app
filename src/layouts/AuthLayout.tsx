@@ -19,7 +19,7 @@ export default function AuthLayout() {
               <Mail className="h-8 w-8 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4">SpamGuard</h1>
+          <h1 className="text-4xl font-bold mb-4">TrueValidator</h1>
           <p className="text-lg text-muted-foreground">
             Professional email validation for businesses. Verify email addresses in real-time with our advanced SMTP verification technology.
           </p>

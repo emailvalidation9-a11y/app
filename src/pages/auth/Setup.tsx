@@ -137,7 +137,7 @@ export default function Setup() {
                         <Zap className="h-8 w-8 text-primary" />
                     </div>
                     <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                        Spam<span className="text-primary">Guard</span>
+                    <span className="text-primary">TrueValidator</span>
                     </h1>
                     <p className="text-xs text-primary/80 font-mono font-bold uppercase tracking-[0.2em] mt-1">System Configuration</p>
                 </div>
@@ -301,7 +301,7 @@ export default function Setup() {
 
                 {/* Footer */}
                 <p className="text-center text-[11px] text-muted-foreground/60 mt-6 font-medium">
-                    SpamGuard Enterprise System &bull; v1.0.0
+                    TrueValidator Enterprise System &bull; v1.0.0
                 </p>
             </div>
         </div>

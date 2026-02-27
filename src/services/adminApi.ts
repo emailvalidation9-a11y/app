@@ -44,6 +44,7 @@ export const adminApi = {
     createBlogPost: (data: any) => api.post('/blog', data),
     updateBlogPost: (id: string, data: any) => api.put(`/blog/${id}`, data),
     deleteBlogPost: (id: string) => api.delete(`/blog/${id}`),
+    uploadBlogImage: (formData: FormData) => api.post('/upload/blog', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
 
     // Contact Inbox
     getContactMessages: () => api.get('/contact'),

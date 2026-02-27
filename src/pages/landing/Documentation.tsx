@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const codeExamples = {
   curl: `curl -X POST \\
-  https://api.spamguard.dev/api/validate/single \\
+  https://api.truevalidator.dev/api/validate/single \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -19,7 +19,7 @@ const codeExamples = {
   }'`,
 
   javascript: `const response = await fetch(
-  'https://api.spamguard.dev/api/validate/single',
+  'https://api.truevalidator.dev/api/validate/single',
   {
     method: 'POST',
     headers: {
@@ -41,7 +41,7 @@ console.log(result);`,
   python: `import requests
 
 response = requests.post(
-    'https://api.spamguard.dev/api/validate/single',
+    'https://api.truevalidator.dev/api/validate/single',
     headers={
         'Authorization': 'Bearer YOUR_API_KEY',
         'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ result = response.json()
 print(result)`,
 
   php: `<?php
-$ch = curl_init('https://api.spamguard.dev/api/validate/single');
+$ch = curl_init('https://api.truevalidator.dev/api/validate/single');
 
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -215,7 +215,7 @@ export default function Documentation() {
                 Introduction
               </h2>
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                Welcome to the SpamGuard REST API. Our enterprise-grade API allows you to validate email addresses
+                Welcome to the TrueValidator REST API. Our enterprise-grade API allows you to validate email addresses
                 programmatically with industry-leading accuracy, advanced SMTP simulation, and sub-second latency.
               </p>
 
@@ -331,7 +331,7 @@ export default function Documentation() {
                 {/* Endpoint */}
                 <div className="bg-card/40 backdrop-blur-sm border border-border/40 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
                   <Badge className="bg-blue-500 text-white hover:bg-blue-600 px-3 py-1 text-sm font-semibold">POST</Badge>
-                  <code className="text-lg font-mono text-foreground font-semibold flex-1 overflow-x-auto custom-scrollbar whitespace-nowrap">https://api.spamguard.dev/api/validate/single</code>
+                  <code className="text-lg font-mono text-foreground font-semibold flex-1 overflow-x-auto custom-scrollbar whitespace-nowrap">https://api.truevalidator.dev/api/validate/single</code>
                 </div>
 
                 {/* Request */}

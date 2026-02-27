@@ -73,7 +73,7 @@ export default function PublicLayout() {
                                 <Zap className="h-5 w-5 text-primary drop-shadow-sm" />
                             </div>
                             <div>
-                                <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent block">Spam<span className="text-primary">Guard</span></span>
+                                <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent block">True<span className="text-primary">Validator</span></span>
                             </div>
                         </Link>
                     </div>
@@ -182,7 +182,7 @@ export default function PublicLayout() {
                                         <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center ring-1 ring-primary/30">
                                             <Zap className="h-5 w-5 text-primary" />
                                         </div>
-                                        <span className="font-extrabold text-xl tracking-tight">SpamGuard</span>
+                                        <span className="font-extrabold text-xl tracking-tight">TrueValidator</span>
                                     </div>
                                 </div>
                                 <div className="flex-1 p-6 space-y-6 overflow-y-auto">
@@ -242,7 +242,7 @@ export default function PublicLayout() {
                             <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center ring-1 ring-primary/30 shadow-inner">
                                 <Zap className="h-5 w-5 text-primary drop-shadow-sm" />
                             </div>
-                            <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Spam<span className="text-primary">Guard</span></span>
+                            <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">True<span className="text-primary">Validator</span></span>
                         </Link>
                         <p className="text-sm text-muted-foreground/80 font-medium leading-relaxed">
                             Enterprise-grade telemetry and validation infrastructure powering next-generation validation pipelines.
@@ -288,7 +288,7 @@ export default function PublicLayout() {
                 </div>
                 <div className="max-w-7xl mx-auto px-6 border-t border-border/40 mt-16 pt-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-xs font-mono font-semibold tracking-widest text-muted-foreground uppercase">
-                        © {new Date().getFullYear()} SpamGuard Compute Network
+                        © {new Date().getFullYear()} TrueValidator Compute Network
                     </p>
                     <div className="flex gap-4">
                         {settings?.socialMedia?.twitter && (

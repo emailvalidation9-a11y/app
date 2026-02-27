@@ -78,8 +78,8 @@ export default function Contact() {
                     <h3 className="text-xl font-bold mb-2">Enterprise Sales</h3>
                     <p className="text-sm text-muted-foreground mb-4">Validate millions of emails per month.</p>
                     <Button variant="outline" className="w-full font-bold h-10 overflow-hidden" asChild>
-                      <a href={`mailto:${settings?.contactInfo?.salesEmail || 'sales@spamguard.dev'}`}>
-                        {settings?.contactInfo?.salesEmail || 'sales@spamguard.dev'}
+                      <a href={`mailto:${settings?.contactInfo?.salesEmail || 'sales@truevalidator.dev'}`}>
+                        {settings?.contactInfo?.salesEmail || 'sales@truevalidator.dev'}
                       </a>
                     </Button>
                   </CardContent>
@@ -92,8 +92,8 @@ export default function Contact() {
                     <h3 className="text-xl font-bold mb-2">Support</h3>
                     <p className="text-sm text-muted-foreground mb-4">Technical or billing assistance.</p>
                     <Button variant="outline" className="w-full font-bold h-10 overflow-hidden" asChild>
-                      <a href={`mailto:${settings?.contactInfo?.supportEmail || 'support@spamguard.dev'}`}>
-                        {settings?.contactInfo?.supportEmail || 'support@spamguard.dev'}
+                      <a href={`mailto:${settings?.contactInfo?.supportEmail || 'support@truevalidator.dev'}`}>
+                        {settings?.contactInfo?.supportEmail || 'support@truevalidator.dev'}
                       </a>
                     </Button>
                   </CardContent>

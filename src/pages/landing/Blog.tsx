@@ -12,6 +12,7 @@ interface BlogPost {
   publishedAt: string;
   excerpt: string;
   slug: string;
+  coverImage?: string;
 }
 
 export default function Blog() {
@@ -59,6 +60,11 @@ export default function Blog() {
               posts.map((post, i) => (
                 <Card key={i} className="bg-card/40 backdrop-blur-md border border-border/40 hover:border-primary/50 transition-all shadow-md group cursor-pointer hover:-translate-y-1">
                   <CardContent className="p-8 flex flex-col md:flex-row md:items-center gap-6">
+                    {post.coverImage && (
+                      <div className="shrink-0 w-full md:w-64 h-48 rounded-xl overflow-hidden mb-4 md:mb-0 shadow-sm border border-border/20">
+                        <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-3">
                         <Badge variant="outline" className="bg-background border-border/50 text-xs font-mono">{post.category}</Badge>

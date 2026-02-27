@@ -99,13 +99,14 @@ export const apiKeysApi = {
 export const billingApi = {
   getPlans: () => api.get('/billing/plans'),
   getSubscription: () => api.get('/billing/subscription'),
-  createCheckout: (data: { plan: string; success_url?: string; cancel_url?: string }) =>
+  createCheckout: (data: { plan: string; success_url?: string; cancel_url?: string; currency?: string }) =>
     api.post('/billing/checkout', data),
-  purchaseCredits: (data: { package: string; success_url?: string; cancel_url?: string }) =>
+  purchaseCredits: (data: { package: string; success_url?: string; cancel_url?: string; currency?: string }) =>
     api.post('/billing/credits', data),
   cancelSubscription: () => api.post('/billing/cancel'),
   getTransactions: (page = 1, limit = 20) =>
     api.get(`/billing/transactions?page=${page}&limit=${limit}`),
+  verifyPayment: (data: any) => api.post('/billing/verifyPayment', data),
 };
 
 // Public API
