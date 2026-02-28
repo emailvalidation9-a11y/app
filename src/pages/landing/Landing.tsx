@@ -3,60 +3,60 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
-  CheckCircle, Zap, Shield, BarChart3, ArrowRight, Check, Globe, Server, Terminal, Lock
+  CheckCircle, Zap, Shield, BarChart3, ArrowRight, Check, Globe, Server, Terminal, Code
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const features = [
   {
+    icon: Code,
+    title: 'Developer-First API',
+    description: 'Integrate real-time email verification into your SaaS in minutes. Built for Node, React, and more.',
+    color: 'text-indigo-500',
+    bg: 'bg-indigo-500/10'
+  },
+  {
     icon: CheckCircle,
     title: 'Syntax Validation',
-    description: 'Verify email format compliance with standard RFC guidelines.',
+    description: 'Verify email format compliance with standard RFC guidelines instantly.',
     color: 'text-green-500',
     bg: 'bg-green-500/10'
   },
   {
-    icon: Globe,
-    title: 'Domain Verification',
-    description: 'Check MX records and domain existence instantly.',
-    color: 'text-blue-500',
-    bg: 'bg-blue-500/10'
+    icon: Zap,
+    title: 'Disposable Email Filter',
+    description: 'Detect and block temporary, throwaway email addresses to stop fake signups.',
+    color: 'text-yellow-500',
+    bg: 'bg-yellow-500/10'
   },
   {
     icon: Server,
-    title: 'SMTP Check',
-    description: 'Verify if the mailbox actually exists without sending an email.',
+    title: 'Deep SMTP Check',
+    description: 'Verify if the mailbox actually exists on the provider server without sending an email.',
     color: 'text-purple-500',
     bg: 'bg-purple-500/10'
   },
   {
     icon: Shield,
     title: 'Spam Trap Detection',
-    description: 'Identify known spam traps to protect your sender reputation.',
+    description: 'Identify known honeypots and spam traps to protect your sender reputation.',
     color: 'text-red-500',
     bg: 'bg-red-500/10'
   },
   {
-    icon: Zap,
-    title: 'Disposable Email Filter',
-    description: 'Detect and block temporary, throwaway email addresses.',
-    color: 'text-yellow-500',
-    bg: 'bg-yellow-500/10'
-  },
-  {
     icon: BarChart3,
-    title: 'Quality Scoring',
-    description: 'Get a 0-100 deliverability score for every email address.',
+    title: 'Deliverability Scoring',
+    description: 'Get a 0-100 deliverability confidence score for every email address on your list.',
     color: 'text-cyan-500',
     bg: 'bg-cyan-500/10'
   },
 ];
 
 const stats = [
-  { value: '99%', label: 'Accuracy', icon: Shield },
-  { value: '50ms', label: 'Fast Response', icon: Zap },
+  { value: '98%', label: 'Bounce Reduction', icon: Shield },
+  { value: '<50ms', label: 'API Response Time', icon: Zap },
   { value: '1M+', label: 'Emails Verified', icon: Server },
-  { value: '24/7', label: 'Uptime', icon: Globe },
+  { value: '99.9%', label: 'Uptime SLA', icon: Globe },
 ];
 
 export default function Landing() {
@@ -68,14 +68,14 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
           <div className="text-center max-w-4xl mx-auto">
             <Badge variant="outline" className="mb-6 bg-primary/5 text-primary border-primary/20 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest backdrop-blur-sm shadow-sm">
-              <Zap className="h-3.5 w-3.5 mr-2 inline-block" /> Fast and Reliable
+              <Zap className="h-3.5 w-3.5 mr-2 inline-block" /> Real-Time Email Verification API
             </Badge>
             <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-tight text-foreground drop-shadow-sm">
-              Email Verification <br className="hidden md:block" />
-              <span className="text-primary">Made Simple</span>
+              Stop Fake Signups & <br className="hidden md:block" />
+              <span className="text-primary">Spam Registrations Instantly</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-10 leading-relaxed max-w-2xl mx-auto">
-              Verify email addresses in real-time. Reduce bounce rates, block fake accounts, and protect your sender reputation quickly and easily.
+              The ultimate Real-Time Email Verification API for SaaS & Startups. Reduce your bounce rate by 98% before you even hit send.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={isAuthenticated ? "/dashboard" : "/register"}>
@@ -86,7 +86,7 @@ export default function Landing() {
               </Link>
               <Link to="/docs">
                 <Button size="lg" variant="outline" className="h-14 px-8 text-base font-bold bg-card/30 backdrop-blur-md border border-border/50 hover:bg-muted/50">
-                  <Terminal className="h-4 w-4 mr-2" /> View Documentation
+                  <Terminal className="h-4 w-4 mr-2" /> View API Docs
                 </Button>
               </Link>
             </div>
@@ -94,7 +94,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Trust & Stats Section */}
       <section className="border-y border-border/40 bg-card/10 backdrop-blur-lg py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-border/40">
@@ -111,50 +111,24 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <Badge variant="outline" className="mb-4 bg-muted text-muted-foreground border-border/50">Features</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">Everything You Need To Validate Emails</h2>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              We check multiple data points to ensure that the emails you collect are real, deliverable, and safe to send to.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <Card key={index} className="group bg-card/40 backdrop-blur-sm border-border/40 hover:bg-card/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                <CardContent className="p-8">
-                  <div className={`h-14 w-14 rounded-2xl ${feature.bg} flex items-center justify-center mb-6 ring-1 ring-inset ring-white/10 shadow-inner group-hover:scale-110 transition-transform`}>
-                    <feature.icon className={`h-7 w-7 ${feature.color}`} />
-                  </div>
-                  <h3 className="font-bold text-xl mb-3 tracking-tight">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Security/Trust Section */}
+      {/* Developer Experience / Validation Process */}
       <section className="py-24 bg-card/30 border-y border-border/40 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <Badge variant="outline" className="mb-4 bg-red-500/10 text-red-500 border-red-500/20 px-3 py-1">
-                <Lock className="h-3.5 w-3.5 mr-2 inline-block" /> Safe & Secure
+              <Badge variant="outline" className="mb-4 bg-primary/10 text-primary border-primary/20 px-3 py-1">
+                <Code className="h-3.5 w-3.5 mr-2 inline-block" /> Built for Developers
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">Your Data Is Private By Default</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">Integrate in Minutes, Not Days</h2>
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                We don't store your email lists. Your data is encrypted during processing and immediately deleted afterward to ensure complete privacy.
+                TrueValidator was built from the ground up to be the most developer-friendly Email Validation API on the market. Better accuracy than ZeroBounce, faster than NeverBounce.
               </p>
               <ul className="space-y-4">
                 {[
-                  'No email data retention',
-                  'Encrypted processing',
-                  'GDPR & CCPA Compliant',
-                  'Secure API endpoints'
+                  'Drop-in replacement for legacy APIs',
+                  'Comprehensive Node.js & React SDKs coming soon',
+                  'Clear, structured JSON responses',
+                  '99.9% guaranteed uptime SLA'
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 font-medium text-foreground">
                     <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
@@ -175,16 +149,18 @@ export default function Landing() {
                   <span className="ml-4 text-xs font-mono text-muted-foreground">Example API Request</span>
                 </div>
                 <div className="font-mono text-sm space-y-2 text-[#e6edf3]">
-                  <div><span className="text-purple-400">POST</span> /api/validate/single</div>
-                  <div className="opacity-70">{"{"}</div>
-                  <div className="pl-4">"email": <span className="text-green-400">"hello@example.com"</span></div>
-                  <div className="opacity-70">{"}"}</div>
+                  <div><span className="text-purple-400">curl</span> -X POST https://api.truevalidator.com/v1/verify \</div>
+                  <div className="pl-4">-H <span className="text-green-400">"Authorization: Bearer YOUR_API_KEY"</span> \</div>
+                  <div className="pl-4">-H <span className="text-green-400">"Content-Type: application/json"</span> \</div>
+                  <div className="pl-4">-d <span className="text-green-400">'{"{"}"email":"hello@disposable.com"{"}"}'</span></div>
                   <br />
-                  <div className="text-blue-400">Response:</div>
+                  <div className="text-blue-400">Response (50ms):</div>
                   <div className="opacity-70">{"{"}</div>
-                  <div className="pl-4">"valid": <span className="text-yellow-400">true</span>,</div>
-                  <div className="pl-4">"score": <span className="text-yellow-400">95</span>,</div>
-                  <div className="pl-4">"smtp_check": <span className="text-yellow-400">true</span></div>
+                  <div className="pl-4">"email": <span className="text-green-400">"hello@disposable.com"</span>,</div>
+                  <div className="pl-4">"valid": <span className="text-yellow-400">false</span>,</div>
+                  <div className="pl-4">"reason": <span className="text-green-400">"disposable_email"</span>,</div>
+                  <div className="pl-4">"score": <span className="text-yellow-400">0</span>,</div>
+                  <div className="pl-4">"smtp_check": <span className="text-yellow-400">false</span></div>
                   <div className="opacity-70">{"}"}</div>
                 </div>
               </div>
@@ -193,17 +169,43 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Features Section */}
+      <section className="py-24 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <Badge variant="outline" className="mb-4 bg-muted text-muted-foreground border-border/50">Features</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">Everything You Need To Validate Emails</h2>
+            <p className="text-xl text-muted-foreground leading-relaxed">
+              We check multiple data points to ensure that the emails you collect are real, deliverable, and safe to hit your inbox.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <Card key={index} className="group bg-card/40 backdrop-blur-sm border-border/40 hover:bg-card/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <CardContent className="p-8">
+                  <div className={`h-14 w-14 rounded-2xl ${feature.bg} flex items-center justify-center mb-6 ring-1 ring-inset ring-white/10 shadow-inner group-hover:scale-110 transition-transform`}>
+                    <feature.icon className={`h-7 w-7 ${feature.color}`} />
+                  </div>
+                  <h3 className="font-bold text-xl mb-3 tracking-tight">{feature.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-32 relative overflow-hidden mt-20">
         <div className="absolute inset-0 bg-primary/5"><div className="absolute inset-0 bg-[url('/noise.svg')] opacity-20 mix-blend-overlay"></div></div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">Ready to get started?</h2>
+          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">Ready to supercharge your email delivery?</h2>
           <p className="text-xl text-muted-foreground mb-10">
-            Join other companies using our tool to keep their email lists clean and deliverable.
+            Join hundreds of SaaS companies using TrueValidator to keep their email lists clean and block fake signups.
           </p>
           <Link to={isAuthenticated ? "/dashboard" : "/register"}>
             <Button size="lg" className="h-16 px-10 text-lg font-bold shadow-[0_0_30px_rgba(var(--primary),0.3)] hover:shadow-[0_0_50px_rgba(var(--primary),0.5)] transition-all gap-3 border border-primary/50">
-              {isAuthenticated ? 'Go to Dashboard' : 'Create Free Account'}
+              {isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial'}
               <ArrowRight className="h-5 w-5" />
             </Button>
           </Link>

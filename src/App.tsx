@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 
 // Layouts
 import DashboardLayout from '@/layouts/DashboardLayout';
@@ -66,6 +67,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="truevalidator-theme">
         <Router>
+          <AnalyticsTracker />
           <AuthProvider>
             <Routes>
               {/* Public Routes */}
